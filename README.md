@@ -59,7 +59,7 @@ api.claimPresenter();
 If everything works a short message should be shown, telling you that 
 you are now in presentation mode. All current and future visitors will be in view 
 only mode from now on. They have to view the slide your browser is currently showing. 
-So you're in good mode now :) .
+So you're in god mode now :) .
 
 There are several other api commands you can use:
 ```js
