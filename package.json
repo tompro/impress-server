@@ -1,0 +1,17 @@
+{
+  "name": "impress-server",
+  "version": "0.0.0",
+  "description": "Enables remote presentations with impress.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": "",
+  "keywords": [
+    "impress.js",
+    "presentation",
+    "remote"
+  ],
+  "author": "ProTom",
+  "license": "BSD"
+}
