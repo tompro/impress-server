@@ -1,6 +1,16 @@
 # Impress.js server
 
-Impress-server enables you to share an [impress.js](https://github.com/bartaz/impress.js/) presentation with other users. 
+Impress-server enables you to share an [impress.js](https://github.com/bartaz/impress.js/) 
+presentation with other users. It is not a remote control but every user who opens 
+the presentation while it is in presentation mode will have the state of the presentation 
+synced in real time to his browser.
+
+## What problem does it solve ?
+In our company we permanently have video conferences with customers. Whenever 
+we want to run a presentation for them we have to do this via a screen sharing 
+tool. Screen sharing is fine but the quality is poor and it uses a lot of bandwith. 
+With impress-server you can run a remote presentation with nearly no bandwidth useage 
+at all and in full impress.js quality.
 
 ## How to use
 First clone this repository to your local harddrive, 
