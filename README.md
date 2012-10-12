@@ -1,6 +1,6 @@
 # Impress.js server
 
-Impress-server enables you to share an impress.js presentation with other users. 
+Impress-server enables you to share an [impress.js](https://github.com/bartaz/impress.js/) presentation with other users. 
 
 ## How to use
 First clone this repository to your local harddrive, 
