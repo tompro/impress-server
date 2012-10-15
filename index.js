@@ -15,7 +15,7 @@ Server.prototype.start = function(dir, port) {
   this.dir = dir || this.dir;
   
   this.app = express();
-  this.app.use("/js", express.static(__dirname + "/public/js"));
+  this.app.use("/js", express.static(__dirname + "/js"));
   this.app.use(express.static(path.resolve(this.dir)));
 
   this.server = http.createServer(this.app);
@@ -25,7 +25,7 @@ Server.prototype.start = function(dir, port) {
   this.setupSocket();
   this.server.listen(this.port);
   console.log(
-    "Presentation server serves directory: " + 
+    "Impress-server serves directory: " + 
     path.resolve(this.dir) + " on port: " + this.port
   );
 }

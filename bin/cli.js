@@ -27,8 +27,6 @@ if(argv.directory) {
 }
 dir = path.resolve(dir);
 
-console.dir(Server);
-
 var server = new Server(dir, argv.port);
 server.start();
 

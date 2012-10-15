@@ -1,12 +1,9 @@
 {
   "name": "impress-server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Enables remote presentations with impress.js",
   "main": "index.js",
   "url" : "https://github.com/tompro/impress-server/issues",
-  "scripts": {
-    "start": "node index.js"
-  },
   "dependencies": {
     "express": "3.x.x",
     "socket.io": "0.9.x",
@@ -16,10 +13,14 @@
   "keywords": [
     "impress.js",
     "presentation",
-    "remote"
+    "remote",
+    "screensharing"
   ],
+  "bin": {
+    "static": "bin/cli.js"
+  },
   "author": "ProTom",
-  "license": "BSD",
+  "license": "MIT",
   "engines": {
     "node": ">= 0.4.0"
   }
