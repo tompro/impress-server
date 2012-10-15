@@ -1,58 +1,71 @@
 var express = require("express"),
-	app = express(),
-	server = require("http").createServer(app),
-	io = require("socket.io").listen(server);
+	http = require("http"),
+	socket = require("socket.io"),
+  path = require("path"),
+  Server = module.exports;
 
-app.use(express.static(__dirname + '/public'));
-app.get('/', function(req, res){
-  res.send('Presentation index');
-});
 
-server.listen(8080);
+Server = function(dir, port) {
+  this.port = port || 8080;
+  this.dir = dir || ".";
+}
 
-var presenter;
-var currentSlide;
+Server.prototype.start = function(dir, port) {
+  this.port = port || this.port;
+  this.dir = dir || this.dir;
+  
+  this.app = express();
+  this.app.use("/js", express.static(__dirname + "/public/js"));
+  this.app.use(express.static(path.resolve(this.dir)));
 
-io.sockets.on('connection', function (socket) {
+  this.server = http.createServer(this.app);
+  this.io = socket.listen(this.server);
+  this.setupSocket();
+  this.server.listen(this.port);
+}
 
-  if( ! presenter ) {
-    socket.emit("mode:presenter", {broadcast: false});
-  } else {
-    socket.emit('mode:view', {slide:currentSlide});
-  }
-
-  socket.on('claim:presenter', function(data) {
+Server.prototype.setupSocket = function() {
+  var io = this.io, presenter, currentSlide;
+  io.sockets.on('connection', function (socket) {
     if( ! presenter ) {
-      presenter = socket;
-      currentSlide = data.slide;
-      socket.broadcast.emit('mode:view', {slide: currentSlide});
-      socket.emit("mode:presenter", {broadcast: true});
+      socket.emit("mode:presenter", {broadcast: false});
+    } else {
+      socket.emit('mode:view', {slide:currentSlide});
     }
-  });
 
-  socket.on('release:presenter', function() {
-    if(socket == presenter) {
-      presenter = null;
-      io.sockets.emit("mode:presenter", {broadcast: false});
-    }
-  });
+    socket.on('claim:presenter', function(data) {
+      if( ! presenter ) {
+        presenter = socket;
+        currentSlide = data.slide;
+        socket.broadcast.emit('mode:view', {slide: currentSlide});
+        socket.emit("mode:presenter", {broadcast: true});
+      }
+    });
 
-  socket.on('follow:presenter', function() {
-    socket.emit("mode:view", {slide: currentSlide});
-  });
+    socket.on('release:presenter', function() {
+      if(socket == presenter) {
+        presenter = null;
+        io.sockets.emit("mode:presenter", {broadcast: false});
+      }
+    });
 
-  socket.on('goto', function (data) {
-    if(presenter == socket) {
-      currentSlide = data.slide;
-      socket.broadcast.emit('goto', data);
-    }
-  });
+    socket.on('follow:presenter', function() {
+      socket.emit("mode:view", {slide: currentSlide});
+    });
 
-  socket.on('disconnect', function() {
-    if(presenter == socket) {
-      presenter = null;
-      currentSlide = null;
-      socket.broadcast.emit("mode:presenter", {broadcast: false});
-    }
+    socket.on('goto', function (data) {
+      if(presenter == socket) {
+        currentSlide = data.slide;
+        socket.broadcast.emit('goto', data);
+      }
+    });
+
+    socket.on('disconnect', function() {
+      if(presenter == socket) {
+        presenter = null;
+        currentSlide = null;
+        socket.broadcast.emit("mode:presenter", {broadcast: false});
+      }
+    });
   });
-});
+}
