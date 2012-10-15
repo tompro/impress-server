@@ -12,32 +12,21 @@ tool. Screen sharing is fine but the quality is poor and it uses a lot of bandwi
 With impress-server you can run a remote presentation with nearly no bandwidth useage 
 at all and in full impress.js quality.
 
-## How to use
-First clone this repository to your local harddrive, 
-change into the cloned directory, install NPM dependencies and then start the 
-server.
+## Install
+Install via NPM:
 
 ```bash
-git clone https://github.com/tompro/impress-server.git
-cd impress-server
-npm install
-node index.js
+npm install impress-server
 ```
-To verify that everything is ok point your browser to:
-[http://localhost:8080/example](http://localhost:8080/example). This 
-should show you the example presentation which is shipped with impress.js.
 
-### Adding a presentation
-Impress-server lets you host multiple presentations. All presentations are 
-located in the public directory. To add a presentation just add a directory 
-to the public folder. Make shure your HTML file containing the presentation, 
-is named index.html. All resources (e.g. CSS, images, ...) you need in your 
-presentation should go into this directory as well. 
+## Prepare presentation
+Change into on of your impress presentation folders. Make sure to name your 
+presentation file index.html. All other resources for your presentation (like 
+images and css) should be put into this directory as well.
 
-You should not add impress.js itself as impress-server need a specific impress.js 
-version to run presentation sharing. Instead change the impress script source to 
-the server version and also include, socket.io and remote.events.js in your 
-presentation.
+Impress-server needs a specific impress.js version to run presentation sharing. 
+So change the impress script source to the server version and also include, 
+socket.io and remote.events.js in your index.html.
 
 ```html
 <script src="/js/impress.js"></script>
@@ -45,7 +34,14 @@ presentation.
 <script src="/js/remote.events.js"></script>
 ```
 
-### Sharing a presentation
+##Start server
+When everything is prepared start the impress-server by typing:
+```bash
+impress-server
+```
+Impress-server also take arguments for port (-p) and directory (-d) it should serve.
+
+## Sharing a presentation
 A presentation is not shared by default but only hosted. Every user visiting 
 your presentation can navigate the presentation himself. If you like to switch 
 to presentation mode, you currently have to hack your way in :) .
