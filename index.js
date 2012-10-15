@@ -2,10 +2,10 @@ var express = require("express"),
 	http = require("http"),
 	socket = require("socket.io"),
   path = require("path"),
-  Server = module.exports;
+  Server;
 
 
-Server = function(dir, port) {
+module.exports = Server = function(dir, port) {
   this.port = port || 8080;
   this.dir = dir || ".";
 }
@@ -19,9 +19,15 @@ Server.prototype.start = function(dir, port) {
   this.app.use(express.static(path.resolve(this.dir)));
 
   this.server = http.createServer(this.app);
-  this.io = socket.listen(this.server);
+  this.io = socket.listen(this.server, {
+    "log level": 0
+  });
   this.setupSocket();
   this.server.listen(this.port);
+  console.log(
+    "Presentation server serves directory: " + 
+    path.resolve(this.dir) + " on port: " + this.port
+  );
 }
 
 Server.prototype.setupSocket = function() {
