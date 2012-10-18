@@ -88,8 +88,7 @@
 		btnClaim = document.querySelector("#claim"),
 		btnRelease = document.querySelector("#release"),
 		passField = document.querySelector("#pass"),
-		controls = document.querySelector(".controls"),
-		touchStart, touchMove;
+		controls = new window.Hammer(document.querySelector(".controls"));
 
 	/**
 	 * Button and menu controls
@@ -118,39 +117,15 @@
 		}
 	});
 
-	/**
-	 * Swipe controls here
-	 */
-	
-	controls.addEventListener('touchstart', function(event) {
-		if(event.touches.length > 0) {
-			touchStart = event.touches[0];
-		}
-	}, false);
-
-	controls.addEventListener('touchmove', function(event) {
-		event.preventDefault();
-		if(event.touches.length > 0) {
-			touchMove = event.touches[0];
-		}
-	}, false);
-
-	controls.addEventListener('touchend', function(event) {
-		if(event.changedTouches && event.changedTouches.length > 0) {
-			touchMove = event.changedTouches[0];
-		}
-		if(touchMove && touchStart) {
-			var distance = touchMove.pageX - touchStart.pageX;
-			if(Math.abs(distance) > 70) {
-				if(distance > 0) {
-					api.prev();
-				} else {
-					api.next();
-				}
+	controls.onswipe = function(event) {
+		if(event.distance > 70) {
+			if(event.direction == "left") {
+				api.next();
+			} else {
+				api.prev();
 			}
+			event.originalEvent.preventDefault();
 		}
-		touchMove = null;
-		touchStart = null;
-	}, false);
+	};
 
 })(window, document);
