@@ -1,6 +1,6 @@
 {
   "name": "impress-server",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Enables remote presentations with impress.js",
   "main": "./index",
   "url" : "https://github.com/tompro/impress-server/issues",

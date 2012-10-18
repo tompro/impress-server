@@ -13,6 +13,10 @@ var path = require("path"),
 		alias: "d",
 		default: ".",
 		description: "Directory to serve presentation from. Defaults to current directory"
+	}).options("password", {
+		alias: "pw",
+		default: null,
+		description: "Password to use when claiming presentation mode. Generated randomly on startup if not provided"
 	}).options("version", {
 		alias: "v",
 		description: "Returns the version of impress-server you are running"
@@ -27,7 +31,7 @@ if(argv.directory) {
 }
 dir = path.resolve(dir);
 
-var server = new Server(dir, argv.port);
+var server = new Server(dir, argv.port, argv.password);
 server.start();
 
 if (argv.help){
