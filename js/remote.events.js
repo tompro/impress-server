@@ -1,4 +1,12 @@
-(function (document, window){
+/**
+ * Exports a wrapper class for impress api to syncronize 
+ * impress api call over several clients
+ * 
+ * @param  {Document} document
+ * @param  {Window} window
+ * @return {RemoteApi}
+ */
+var RemoteApi = (function(document, window) {
     'use strict';
 
     function RemoteApi(api) {
@@ -6,15 +14,18 @@
         this.broadcast = false;
         this.ignore = false;
 
-        if(window.io) {
-            this.socket = window.io.connect();
-            this.setupSocketEvents();
-        } else {
-            this.presenter = true;
-        }
         this.api = api;
         this.steps = document.querySelectorAll('.step');
         this.hint = document.querySelector('.hint');
+
+        if(window.io) {
+            this.socket = window.io.connect();
+            this.setupSocketEvents();
+            this.emit("register:viewer", {totalSlides: this.steps.length});
+        } else {
+            this.presenter = true;
+        }
+        
     };
 
     RemoteApi.prototype.currentSlide = function() {
@@ -33,12 +44,13 @@
             if(this.broadcast) {
                 this.emit("goto", {slide: slide, duration: duration});
             }
+
             this.api.goto(el, duration);
         }
     };
 
-    RemoteApi.prototype.claimPresenter = function() {
-        this.emit("claim:presenter", {slide: this.currentSlide()});
+    RemoteApi.prototype.claimPresenter = function(pass) {
+        this.emit("claim:presenter", {slide: this.currentSlide(), pass: pass});
     }
 
     RemoteApi.prototype.releasePresenter = function() {
@@ -91,7 +103,7 @@
 
     RemoteApi.prototype.setupSocketEvents = function() {
         var self = this;
-        
+
         this.socket.on("goto", function(data) {
             if( ! self.presenter ) {
                 self.api.goto(data.slide, data.duration);
@@ -129,6 +141,20 @@
         }
     };
 
+    return RemoteApi;
+
+})(document, window);
+
+/**
+ * Setup events like in original impress.js but use RemoteApi as wrapper 
+ * for impress api.
+ * 
+ * @param  {Document} document
+ * @param  {Window} window
+ * @return {void}
+ */
+(function (document, window){
+
     // throttling function calls, by Remy Sharp
     // http://remysharp.com/2010/07/21/throttling-function-calls/
     var throttle = function (fn, delay) {
@@ -145,7 +171,7 @@
     // wait for impress.js to be initialized
     document.addEventListener("impress:init", function (event) {
 
-        var api = new RemoteApi(event.detail.api);
+        var api = new window.RemoteApi(event.detail.api);
         window.api = api;
 
         // Prevent default keydown action when one of supported key is pressed.
