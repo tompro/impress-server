@@ -153,8 +153,7 @@ var RemoteApi = (function(document, window) {
  * @param  {Window} window
  * @return {void}
  */
-(function (document, window){
-
+var initRemoteEvents = (function (document, window){
     // throttling function calls, by Remy Sharp
     // http://remysharp.com/2010/07/21/throttling-function-calls/
     var throttle = function (fn, delay) {
@@ -169,9 +168,9 @@ var RemoteApi = (function(document, window) {
     };
 
     // wait for impress.js to be initialized
-    document.addEventListener("impress:init", function (event) {
-
-        var api = new window.RemoteApi(event.detail.api);
+    return function (impressApi) {
+        
+        var api = new window.RemoteApi(impressApi);
         window.api = api;
 
         // Prevent default keydown action when one of supported key is pressed.
@@ -268,6 +267,6 @@ var RemoteApi = (function(document, window) {
             api.goto( document.querySelector(".active"), 500 );
         }, 250), false);
         
-    }, false);
+    };
 
 })(document, window);

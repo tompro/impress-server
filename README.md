@@ -1,6 +1,6 @@
 # Impress.js server
 
-Impress-server enables you to share an [impress.js](https://github.com/bartaz/impress.js/) 
+Impress-server enables you to share an [impress.js](http://bartaz.github.com/impress.js/) 
 presentation with other users. It is not only a remote control, but every user who opens 
 the presentation while it is in presentation mode, will have the state of the presentation 
 synced in real time to his browser.
@@ -13,7 +13,7 @@ With impress-server you can run a remote presentation with nearly no bandwidth u
 at all and in full impress.js quality.
 
 In addition to that, you can use impress-server just to give you the ability to 
-remote control your presentation with your phone.
+remote control your presentation with your phone or another computer.
 
 ## Install
 Install via NPM:
@@ -23,32 +23,26 @@ npm install impress-server
 ```
 
 ## Prepare presentation
-Change into on of your impress presentation folders. Make sure to name your 
-presentation file index.html. All other resources for your presentation (like 
+Change into on of your impress presentation folder. Make sure to name your 
+presentation file ```index.html```. All other resources for your presentation (like 
 images and css) should be put into this directory as well.
 
 Impress-server needs a specific impress.js version to run presentation sharing. 
-So change the impress script source to the server version and also include, 
-socket.io and remote.events.js in your index.html.
-
-```html
-<script src="/js/impress.js"></script>
-<script src="/socket.io/socket.io.js"></script>
-<script src="/js/remote.events.js"></script>
-```
+Starting with impress-server 0.0.8 you no longer need to adopt your presentations html 
+file. Just make sure you're loading a ```impress.js``` JavaScript file and you're done.
 
 ##Start server
-When everything is prepared start the impress-server by typing:
+When everything is prepared, start the impress-server by typing:
 ```bash
 impress-server
 ```
-Impress-server also take arguments for port (-p) and directory (-d) it should serve. 
+Impress-server also takes arguments for port (-p) and directory (-d) it should serve. 
 The server generates a password on startup which you need later to claim the presentation 
 mode. You can provide your own password by providing a password (--pw) param at server 
 startup.
 
 ## Using a mobile device as remote control
-Since version 0.0.6, impress-server supports a remote controller. To enable your 
+Since version 0.0.7, impress-server supports a remote controller. To enable your 
 phone to act as a remote, point its browser to your presentation server on the route 
 /remote. 
 

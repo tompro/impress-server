@@ -4,7 +4,10 @@ var express = require("express"),
   path = require("path"),
   fs = require("fs"),
   async = require("async"),
-  clientDeps = ["/js/impress.js", "/node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.js", "/js/remote.events.js"],
+  clientDeps = [
+    "/js/loader.js",
+    "/js/impress.js"
+  ],
   Server;
 
 
@@ -42,10 +45,10 @@ Server.prototype.setupApp = function() {
 Server.prototype.setupImpressRoute = function() {
   this.app.get(/impress.js/, function(request, response) {
     response.set('Content-Type', 'text/javascript');
-    if(this.impress) {
+    /*if(this.impress) {
       response.send(this.impress);
       return;
-    }
+    }*/
 
     var files = [];
     for(var i=0; i<clientDeps.length; i++) {
