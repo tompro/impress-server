@@ -1,13 +1,14 @@
 {
   "name": "impress-server",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Enables remote presentations with impress.js",
   "main": "./index",
   "url" : "https://github.com/tompro/impress-server/issues",
   "dependencies": {
     "express": "3.x.x",
     "socket.io": "0.9.x",
-    "optimist": ">=0.3.4"
+    "optimist": ">=0.3.4",
+    "async": ">=0.1.22"
   },
   "repository": {"type": "git", "url": "https://github.com/tompro/impress-server"},
   "keywords": [

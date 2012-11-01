@@ -2,6 +2,9 @@ var express = require("express"),
 	http = require("http"),
 	socket = require("socket.io"),
   path = require("path"),
+  fs = require("fs"),
+  async = require("async"),
+  clientDeps = ["/js/impress.js", "/node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.js", "/js/remote.events.js"],
   Server;
 
 
@@ -32,10 +35,36 @@ Server.prototype.start = function(dir, port) {
 
 Server.prototype.setupApp = function() {
   this.app = express();
+  this.setupImpressRoute();
+  this.setupStaticDirs();
+}
+
+Server.prototype.setupImpressRoute = function() {
+  this.app.get(/impress.js/, function(request, response) {
+    response.set('Content-Type', 'text/javascript');
+    if(this.impress) {
+      response.send(this.impress);
+      return;
+    }
+
+    var files = [];
+    for(var i=0; i<clientDeps.length; i++) {
+      files[i] = __dirname + clientDeps[i];
+    }
+
+    async.map(files, fs.readFile, function(err, res) {
+      this.impress = res.join('');
+      response.send(this.impress);
+    });
+    
+  });
+};
+
+Server.prototype.setupStaticDirs = function() {
   this.app.use("/js", express.static(__dirname + "/js"));
   this.app.use(express.static(path.resolve(this.dir)));
   this.app.use(express.static(__dirname + "/public"));
-}
+};
 
 Server.prototype.getPass = function() {
   if(!this.pass) {
