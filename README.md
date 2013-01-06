@@ -19,7 +19,7 @@ remote control your presentation with your phone or another computer.
 Install via NPM:
 
 ```bash
-npm install impress-server
+npm install -g impress-server
 ```
 
 ## Prepare presentation
