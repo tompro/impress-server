@@ -1,3 +1,10 @@
+function startPres(document, window) {
+if (window.presStarted)
+    return;
+window.presStarted = true;
+
+var innerBg = document.querySelector('.innerBg');
+
 /**
  * impress.js
  *
@@ -218,6 +225,7 @@
     // for a presentation based on the element with given id ('impress'
     // by default).
     var impress = window.impress = function ( rootId ) {
+        var previousInit = body.classList.contains("impress-enabled");
         
         // If impress.js is not supported by the browser return a dummy API
         // it may not be a perfect solution but we return early and avoid
@@ -258,7 +266,11 @@
         
         // root presentation elements
         var root = byId( rootId );
-        var canvas = document.createElement("div");
+        if (previousInit) {
+            var canvas = root.children[0];
+        } else {
+            var canvas = document.createElement("div");
+        }
         
         var initialized = false;
         
@@ -355,10 +367,12 @@
             windowScale = computeWindowScale( config );
             
             // wrap steps with "canvas" element
-            arrayify( root.childNodes ).forEach(function ( el ) {
-                canvas.appendChild( el );
-            });
-            root.appendChild(canvas);
+            if (!previousInit) {
+                arrayify( root.childNodes ).forEach(function ( el ) {
+                    canvas.appendChild( el );
+                });
+                root.appendChild(canvas);
+            }
             
             // set initial styles
             document.documentElement.style.height = "100%";
@@ -438,13 +452,24 @@
             window.scrollTo(0, 0);
             
             var step = stepsData["impress-" + el.id];
+
+            function updateSurface(step, operation) {
+                var state = step.dataset.state;
+                if (typeof state == 'string') {
+                    state = state.trim().split(' ');
+                    for (var i = 0; i < state.length; ++i) {
+                        innerBg.classList[operation](state[i]);
+                    }
+                }
+            }
             
             if ( activeStep ) {
                 activeStep.classList.remove("active");
                 body.classList.remove("impress-on-" + activeStep.id);
+                updateSurface(activeStep, 'remove');
             }
             el.classList.add("active");
-            
+            updateSurface(el, 'add');
             body.classList.add("impress-on-" + el.id);
             
             // compute target state of the canvas based on given step
@@ -643,4 +668,28 @@
     // flag that can be used in JS to check if browser have passed the support test
     impress.supported = impressSupported;
     
+})(document, window);
+
+// Code below is added for compatibility with Strut (http://strut.io/)
+
+// Use escape key to switch to overview
+document.addEventListener("keydown", function(e) {
+    if (e.keyCode == 27) {
+        impress().goto('overview');
+    }
+}, false);
+
+}
+
+// Compatibility with regular impress.js behavior:
+// impress().init() initializes the presentation.
+(function ( document, window ) {
+    window.impress = function ( rootId ) {
+    	return {
+    		init: function() {
+    			startPres(document, window);
+    			window.impress().init();
+    		}
+    	};
+    };
 })(document, window);
