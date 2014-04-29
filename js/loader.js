@@ -8,10 +8,15 @@
 			"/socket.io/socket.io.js",
 			"/js/remote.events.js",
 		],
+		head = document.querySelector('head'),
 		body = document.querySelector('body'),
 		i, loaded = 0, impressApi;
 
-	if(body) {
+	// impress.js may be loaded in head or body
+	// if loaded in head, body is not ready yet
+	var target = body ? body : head;
+
+	if(target) {
 		for(i=0; i< deps.length; i++) {
 			var script = document.createElement('script');
 			script.onload = function() {
@@ -23,7 +28,7 @@
 				}
 			};
 			script.src = deps[i];
-			body.appendChild(script);
+			target.appendChild(script);
 		}
 	}
 
